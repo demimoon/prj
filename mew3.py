@@ -1,4 +1,4 @@
-from os import remove
+import os
 import sys
 import pygame
 import requests
@@ -13,6 +13,12 @@ class Map(object):
 
     def ll(self):
         return str(self.y) + "," + str(self.x)
+
+    def update(self, event):
+        if event.key == pygame.K_PAGEUP and self.zoom < 19:
+            self.zoom += 1
+        elif event.key == pygame.K_PAGEDOWN and self.zoom > 2:
+            self.zoom -= 1
 
 
 def load_map(mp):
@@ -41,8 +47,10 @@ if __name__ == "__main__":
         event = pygame.event.wait()
         if event.type == pygame.QUIT:
             break
+        elif event.type == pygame.KEYDOWN:
+            mp.update(event)
         map = load_map(mp)
         screen.blit(pygame.image.load(map), (0, 0))
         pygame.display.flip()
     pygame.quit()
-    remove(map)
+    os.remove(map)
